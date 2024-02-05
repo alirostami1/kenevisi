@@ -43,6 +43,7 @@ func main() {
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))
+	server.Static("/images", config.UploadFolder)
 
 	router := server.Group("/api")
 	router.GET("/healthchecker", func(ctx *gin.Context) {

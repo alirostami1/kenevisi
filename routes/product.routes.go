@@ -14,8 +14,8 @@ func NewRouteProductController(productController controllers.ProductController) 
 }
 
 func (uc *ProductRouteController) ProductRoute(rg *gin.RouterGroup) {
-
 	router := rg.Group("product")
 	router.POST("", uc.productController.CreateProduct)
+	router.POST("image", uc.productController.UploadProductImage)
 	router.GET("", uc.productController.GetProducts)
 }
