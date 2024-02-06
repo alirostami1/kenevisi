@@ -3,6 +3,7 @@ package controllers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -84,4 +85,22 @@ func generateRandomHashString(length int) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(bytes), nil
+}
+
+func (uc *ProductController) DeleteProduct(ctx *gin.Context) {
+	// productIdInt := ctx.GetInt("id")
+	productIdUri := models.ProductIdUri{}
+	err := ctx.BindUri(&productIdUri)
+	if err != nil {
+		return
+	}
+
+	log.Println(productIdUri.ID)
+
+	if err := initializers.DB.Delete(&models.Product{}, productIdUri.ID).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "product deleted successfully"})
 }

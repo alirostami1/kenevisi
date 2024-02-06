@@ -18,4 +18,5 @@ func (uc *ProductRouteController) ProductRoute(rg *gin.RouterGroup) {
 	router.POST("", uc.productController.CreateProduct)
 	router.POST("image", uc.productController.UploadProductImage)
 	router.GET("", uc.productController.GetProducts)
+	router.DELETE(":id", uc.productController.DeleteProduct)
 }

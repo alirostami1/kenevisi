@@ -8,7 +8,7 @@ import (
 )
 
 type Product struct {
-	ID            int            `gorm:"type:uuid;primaryKey" json:"id"`
+	ID            int            `gorm:"primaryKey" json:"id"`
 	Name          string         `gorm:"not null" json:"name"`
 	Type          string         `gorm:"not null" json:"type"`
 	Price         int            `gorm:"not null" json:"price"`
@@ -18,25 +18,25 @@ type Product struct {
 	CreatedAt     time.Time      `json:"createdAt"`
 	UpdatedAt     time.Time      `json:"updatedAt"`
 	DeletedAt     gorm.DeletedAt `json:"deletedAt"`
-	Colors        []Color        `gorm:"foreignKey:ProductId;references:ID" json:"colors"`
-	Sizes         []Size         `gorm:"foreignKey:ProductId;references:ID" json:"sizes"`
-	Filters       []Filter       `gorm:"foreignKey:ProductId;references:ID" json:"filters"`
+	Colors        []Color        `json:"colors"`
+	Sizes         []Size         `json:"sizes"`
+	Filters       []Filter       `json:"filters"`
 }
 
 type Color struct {
-	ID        int    `gorm:"type:uuid;primaryKey" json:"id"`
+	ID        int    `gorm:"primaryKey" json:"id"`
 	Name      string `gorm:"not null" json:"name"`
 	ProductId int    `gorm:"not null" json:"productId"`
 }
 
 type Size struct {
-	ID        int    `gorm:"type:uuid;primaryKey" json:"id"`
+	ID        int    `gorm:"primaryKey" json:"id"`
 	Name      string `gorm:"not null" json:"name"`
 	ProductId int    `gorm:"not null" json:"productId"`
 }
 
 type Filter struct {
-	ID        int    `gorm:"type:uuid;primaryKey" json:"id"`
+	ID        int    `gorm:"primaryKey" json:"id"`
 	Name      string `gorm:"not null" json:"name"`
 	ProductId int    `gorm:"not null" json:"productId"`
 }
@@ -68,6 +68,7 @@ func (c *CreateProductPayload) ToProduct() Product {
 }
 
 type GetProductResponse struct {
+	ID            int      `json:"id"`
 	Name          string   `json:"name"`
 	Type          string   `json:"type"`
 	Price         int      `json:"price"`
@@ -81,6 +82,7 @@ type GetProductResponse struct {
 
 func (p *Product) ToGetProductResponse() GetProductResponse {
 	return GetProductResponse{
+		ID:            p.ID,
 		Name:          p.Name,
 		Type:          p.Type,
 		Price:         p.Price,
@@ -91,4 +93,8 @@ func (p *Product) ToGetProductResponse() GetProductResponse {
 		Sizes:         lo.Map(p.Sizes, func(size Size, _ int) string { return size.Name }),
 		Filters:       lo.Map(p.Filters, func(filter Filter, _ int) string { return filter.Name }),
 	}
+}
+
+type ProductIdUri struct {
+	ID int `uri:"id" binding:"required,gt=0"`
 }
