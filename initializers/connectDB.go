@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	// "gorm.io/driver/sqlite" // Sqlite driver based on CGO
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
